@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🚀 My Awesome App</title>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0e17;
+    --card: #1a1826;
+    --card2: #221f33;
+    --accent1: #ff6b6b;
+    --accent2: #ffd93d;
+    --accent3: #6bcb77;
+    --accent4: #4d96ff;
+    --accent5: #c77dff;
+    --text: #fffffe;
+    --muted: #a7a9be;
+    --radius: 20px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Stars background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 70%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 80% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 10% 60%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 50%, rgba(255,255,255,0.2) 0%, transparent 100%),
+      radial-gradient(1px 1px at 50% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 75% 85%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    text-align: center;
+    padding: 30px 20px 10px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(2rem, 6vw, 3.5rem);
+    background: linear-gradient(135deg, var(--accent1), var(--accent2), var(--accent3), var(--accent4), var(--accent5));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: hueShift 5s linear infinite;
+  }
+
+  @keyframes hueShift {
+    0% { filter: hue-rotate(0deg); }
+    100% { filter: hue-rotate(360deg); }
+  }
+
+  header p { color: var(--muted); font-size: 1rem; margin-top: 4px; }
+
+  /* ===== TABS ===== */
+  .tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding: 20px 16px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .tab-btn {
+    background: var(--card);
+    border: 2px solid transparent;
+    color: var(--muted);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1rem;
+    padding: 10px 22px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tab-btn:hover { transform: translateY(-2px); }
+
+  .tab-btn.active[data-tab="calc"]    { background: var(--accent4); color: #fff; border-color: var(--accent4); box-shadow: 0 0 20px rgba(77,150,255,0.5); }
+  .tab-btn.active[data-tab="todo"]    { background: var(--accent3); color: #fff; border-color: var(--accent3); box-shadow: 0 0 20px rgba(107,203,119,0.5); }
+  .tab-btn.active[data-tab="snake"]   { background: var(--accent1); color: #fff; border-color: var(--accent1); box-shadow: 0 0 20px rgba(255,107,107,0.5); }
+  .tab-btn.active[data-tab="pomodo"] { background: var(--accent5); color: #fff; border-color: var(--accent5); box-shadow: 0 0 20px rgba(199,125,255,0.5); }
+
+  /* ===== PANELS ===== */
+  .panel {
+    display: none;
+    max-width: 520px;
+    margin: 0 auto;
+    padding: 0 16px 40px;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 0.3s ease;
+  }
+  .panel.active { display: block; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  }
+
+  /* ==============================
+     CALCULATOR
+  ============================== */
+  #calc-display {
+    background: #0a0912;
+    border-radius: 14px;
+    padding: 20px 16px 12px;
+    text-align: right;
+    margin-bottom: 16px;
+  }
+
+  #calc-history {
+    color: var(--muted);
+    font-size: 0.85rem;
+    min-height: 20px;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  #calc-current {
+    font-family: 'Fredoka One', cursive;
+    font-size: 2.8rem;
+    color: var(--text);
+    word-break: break-all;
+    line-height: 1.1;
+  }
+
+  .calc-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+  }
+
+  .calc-btn {
+    background: var(--card2);
+    border: none;
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.3rem;
+    padding: 18px 0;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .calc-btn:hover  { transform: scale(1.05); }
+  .calc-btn:active { transform: scale(0.95); }
+
+  .calc-btn.op   { color: var(--accent4); }
+  .calc-btn.eq   { background: var(--accent4); color: #fff; box-shadow: 0 4px 16px rgba(77,150,255,0.4); }
+  .calc-btn.clr  { color: var(--accent1); }
+  .calc-btn.span2 { grid-column: span 2; }
+
+  /* ==============================
+     TO-DO LIST
+  ============================== */
+  .todo-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .todo-input-row input {
+    flex: 1;
+    background: var(--card2);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 12px 16px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .todo-input-row input:focus { border-color: var(--accent3); }
+  .todo-input-row input::placeholder { color: var(--muted); }
+
+  .btn-add {
+    background: var(--accent3);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.4rem;
+    width: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .btn-add:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(107,203,119,0.5); }
+
+  .todo-stats {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+
+  .todo-list { list-style: none; display: flex; flex-direction: column; gap: 8px; max-height: 350px; overflow-y: auto; }
+
+  .todo-item {
+    background: var(--card2);
+    border-radius: 12px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    animation: fadeUp 0.2s ease;
+    transition: opacity 0.3s;
+  }
+
+  .todo-item.done { opacity: 0.5; }
+
+  .todo-check {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 2.5px solid var(--accent3);
+    background: transparent;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: grid;
+    place-items: center;
+    transition: all 0.2s;
+    font-size: 0.7rem;
+  }
+  .todo-item.done .todo-check { background: var(--accent3); }
+
+  .todo-text {
+    flex: 1;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: text-decoration 0.2s;
+  }
+  .todo-item.done .todo-text { text-decoration: line-through; }
+
+  .todo-del {
+    background: none;
+    border: none;
+    color: var(--accent1);
+    cursor: pointer;
+    font-size: 1.1rem;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+    padding: 2px 6px;
+  }
+  .todo-del:hover { opacity: 1; }
+
+  /* ==============================
+     SNAKE GAME
+  ============================== */
+  .snake-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .snake-score-row {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .score-box {
+    background: var(--card2);
+    border-radius: 12px;
+    padding: 10px 20px;
+    text-align: center;
+    flex: 1;
+  }
+  .score-box .label { font-size: 0.75rem; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .score-box .value { font-family: 'Fredoka One', cursive; font-size: 1.8rem; color: var(--accent1); }
+  .score-box.best .value { color: var(--accent2); }
+
+  #snakeCanvas {
+    border-radius: 14px;
+    border: 3px solid var(--card2);
+    display: block;
+    max-width: 100%;
+  }
+
+  .snake-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,9,18,0.85);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    gap: 12px;
+  }
+
+  .snake-overlay h2 { font-family: 'Fredoka One', cursive; font-size: 2rem; color: var(--accent1); }
+  .snake-overlay p  { color: var(--muted); font-weight: 700; }
+
+  .canvas-wrap { position: relative; }
+
+  .btn-snake {
+    background: var(--accent1);
+    border: none;
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    padding: 12px 30px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-snake:hover { transform: scale(1.05); box-shadow: 0 4px 20px rgba(255,107,107,0.5); }
+
+  .dpad {
+    display: grid;
+    grid-template-areas: ". up ." "left . right" ". down .";
+    grid-template-columns: repeat(3, 50px);
+    grid-template-rows: repeat(3, 50px);
+    gap: 5px;
+  }
+
+  .dpad button {
+    background: var(--card2);
+    border: none;
+    border-radius: 10px;
+    color: var(--text);
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: grid;
+    place-items: center;
+  }
+  .dpad button:active { transform: scale(0.9); background: var(--accent1); }
+  .dpad .d-up    { grid-area: up; }
+  .dpad .d-left  { grid-area: left; }
+  .dpad .d-right { grid-area: right; }
+  .dpad .d-down  { grid-area: down; }
+
+  /* ==============================
+     POMODORO
+  ============================== */
+  .pomo-wrap { display: flex; flex-direction: column; align-items: center; gap: 24px; }
+
+  .pomo-mode-tabs {
+    display: flex;
+    background: var(--card2);
+    border-radius: 50px;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  .pomo-tab {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-family: 'Fredoka One', cursive;
+    font-size: 0.9rem;
+    padding: 8px 18px;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+
+  .pomo-tab.active { background: var(--accent5); color: #fff; box-shadow: 0 2px 12px rgba(199,125,255,0.4); }
+
+  .pomo-ring-wrap {
+    position: relative;
+    width: 220px;
+    height: 220px;
+  }
+
+  .pomo-ring-wrap svg {
+    transform: rotate(-90deg);
+    position: absolute;
+    inset: 0;
+  }
+
+  #pomoRing {
+    transition: stroke-dashoffset 1s linear;
+    stroke-linecap: round;
+  }
+
+  .pomo-time-center {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #pomoTime {
+    font-family: 'Fredoka One', cursive;
+    font-size: 3.2rem;
+    color: var(--text);
+    line-height: 1;
+  }
+
+  #pomoLabel {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .pomo-controls { display: flex; gap: 12px; align-items: center; }
+
+  .pomo-btn {
+    background: var(--accent5);
+    border: none;
+    border-radius: 14px;
+    color: #fff;
+    font-family: 'Fredoka One', cursive;
+    font-size: 1.1rem;
+    padding: 14px 32px;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 16px rgba(199,125,255,0.4);
+  }
+  .pomo-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(199,125,255,0.6); }
+
+  .pomo-reset {
+    background: var(--card2);
+    border: none;
+    border-radius: 12px;
+    color: var(--muted);
+    font-size: 1.4rem;
+    width: 46px;
+    height: 46px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: grid;
+    place-items: center;
+  }
+  .pomo-reset:hover { color: var(--text); background: var(--accent1); }
+
+  .pomo-sessions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .session-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--card2);
+    transition: background 0.3s;
+  }
+  .session-dot.filled { background: var(--accent5); box-shadow: 0 0 8px var(--accent5); }
+
+  .pomo-msg {
+    font-weight: 800;
+    font-size: 0.95rem;
+    color: var(--muted);
+    text-align: center;
+    min-height: 1.2em;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--card2); border-radius: 10px; }
+  ::-webkit-scrollbar-thumb { background: var(--muted); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🚀 My Awesome App</h1>
+  <p>Built by a future developer ✨</p>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="calc">🧮 Calculator</button>
+  <button class="tab-btn" data-tab="todo">📝 To-Do</button>
+  <button class="tab-btn" data-tab="snake">🐍 Snake</button>
+  <button class="tab-btn" data-tab="pomodo">🍅 Pomodoro</button>
+</div>
+
+<!-- ===== CALCULATOR ===== -->
+<div class="panel active" id="panel-calc">
+  <div class="card">
+    <div id="calc-display">
+      <div id="calc-history"></div>
+      <div id="calc-current">0</div>
+    </div>
+    <div class="calc-grid">
+      <button class="calc-btn clr" onclick="calcClear()">AC</button>
+      <button class="calc-btn clr" onclick="calcToggleSign()">+/-</button>
+      <button class="calc-btn clr" onclick="calcPercent()">%</button>
+      <button class="calc-btn op"  onclick="calcOp('/')">÷</button>
+
+      <button class="calc-btn" onclick="calcNum('7')">7</button>
+      <button class="calc-btn" onclick="calcNum('8')">8</button>
+      <button class="calc-btn" onclick="calcNum('9')">9</button>
+      <button class="calc-btn op" onclick="calcOp('*')">×</button>
+
+      <button class="calc-btn" onclick="calcNum('4')">4</button>
+      <button class="calc-btn" onclick="calcNum('5')">5</button>
+      <button class="calc-btn" onclick="calcNum('6')">6</button>
+      <button class="calc-btn op" onclick="calcOp('-')">−</button>
+
+      <button class="calc-btn" onclick="calcNum('1')">1</button>
+      <button class="calc-btn" onclick="calcNum('2')">2</button>
+      <button class="calc-btn" onclick="calcNum('3')">3</button>
+      <button class="calc-btn op" onclick="calcOp('+')">+</button>
+
+      <button class="calc-btn span2" onclick="calcNum('0')">0</button>
+      <button class="calc-btn" onclick="calcDot()">.</button>
+      <button class="calc-btn eq" onclick="calcEquals()">=</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TO-DO LIST ===== -->
+<div class="panel" id="panel-todo">
+  <div class="card">
+    <div class="todo-input-row">
+      <input type="text" id="todoInput" placeholder="What do you need to do? 💪" maxlength="80">
+      <button class="btn-add" onclick="addTodo()">+</button>
+    </div>
+    <div class="todo-stats">
+      <span id="todoCount">0 tasks</span>
+      <span id="todoDone">0 done 🎉</span>
+    </div>
+    <ul class="todo-list" id="todoList"></ul>
+  </div>
+</div>
+
+<!-- ===== SNAKE ===== -->
+<div class="panel" id="panel-snake">
+  <div class="card">
+    <div class="snake-wrap">
+      <div class="snake-score-row">
+        <div class="score-box">
+          <div class="label">Score</div>
+          <div class="value" id="snakeScore">0</div>
+        </div>
+        <div class="score-box best">
+          <div class="label">Best</div>
+          <div class="value" id="snakeBest">0</div>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <canvas id="snakeCanvas" width="300" height="300"></canvas>
+        <div class="snake-overlay" id="snakeOverlay">
+          <h2>🐍 Snake!</h2>
+          <p>Use arrow keys or D-Pad</p>
+          <button class="btn-snake" onclick="startSnake()">▶ Play</button>
+        </div>
+      </div>
+
+      <div class="dpad">
+        <button class="d-up"    onclick="snakeDir(0,-1)">▲</button>
+        <button class="d-left"  onclick="snakeDir(-1,0)">◀</button>
+        <button class="d-right" onclick="snakeDir(1,0)">▶</button>
+        <button class="d-down"  onclick="snakeDir(0,1)">▼</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== POMODORO ===== -->
+<div class="panel" id="panel-pomodo">
+  <div class="card">
+    <div class="pomo-wrap">
+
+      <div class="pomo-mode-tabs">
+        <button class="pomo-tab active" onclick="setPomoMode('work')">🍅 Focus</button>
+        <button class="pomo-tab" onclick="setPomoMode('short')">☕ Short Break</button>
+        <button class="pomo-tab" onclick="setPomoMode('long')">😴 Long Break</button>
+      </div>
+
+      <div class="pomo-ring-wrap">
+        <svg width="220" height="220" viewBox="0 0 220 220">
+          <circle cx="110" cy="110" r="95" fill="none" stroke="#1a1826" stroke-width="14"/>
+          <circle id="pomoRing" cx="110" cy="110" r="95" fill="none"
+            stroke="#c77dff" stroke-width="14"
+            stroke-dasharray="596.9"
+            stroke-dashoffset="0"/>
+        </svg>
+        <div class="pomo-time-center">
+          <div id="pomoTime">25:00</div>
+          <div id="pomoLabel">Focus Time</div>
+        </div>
+      </div>
+
+      <div class="pomo-controls">
+        <button class="pomo-reset" onclick="resetPomo()" title="Reset">↺</button>
+        <button class="pomo-btn" id="pomoBtn" onclick="togglePomo()">▶ Start</button>
+      </div>
+
+      <div class="pomo-sessions">
+        <span style="color:var(--muted);font-weight:700;font-size:0.85rem;margin-right:4px;">Sessions:</span>
+        <div class="session-dot" id="sd0"></div>
+        <div class="session-dot" id="sd1"></div>
+        <div class="session-dot" id="sd2"></div>
+        <div class="session-dot" id="sd3"></div>
+      </div>
+
+      <div class="pomo-msg" id="pomoMsg">Ready to focus? You've got this! 💪</div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// ===========================
+// TABS
+// ===========================
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+    if (btn.dataset.tab === 'snake') resizeCanvas();
+  });
+});
+
+// ===========================
+// CALCULATOR
+// ===========================
+let cDisplay = '0', cPrev = '', cOp = '', cReset = false;
+
+function updateCalc() {
+  document.getElementById('calc-current').textContent = cDisplay;
+}
+
+function calcNum(n) {
+  if (cReset) { cDisplay = n; cReset = false; }
+  else cDisplay = cDisplay === '0' ? n : cDisplay + n;
+  updateCalc();
+}
+
+function calcDot() {
+  if (cReset) { cDisplay = '0.'; cReset = false; }
+  else if (!cDisplay.includes('.')) cDisplay += '.';
+  updateCalc();
+}
+
+function calcOp(op) {
+  if (cOp && !cReset) calcEquals();
+  cPrev = cDisplay;
+  cOp = op;
+  cReset = true;
+  const sym = {'+':'+','-':'−','*':'×','/':'÷'}[op];
+  document.getElementById('calc-history').textContent = cPrev + ' ' + sym;
+}
+
+function calcEquals() {
+  if (!cOp) return;
+  const a = parseFloat(cPrev), b = parseFloat(cDisplay);
+  let res;
+  if (cOp === '+') res = a + b;
+  else if (cOp === '-') res = a - b;
+  else if (cOp === '*') res = a * b;
+  else if (cOp === '/') res = b === 0 ? 'Error' : a / b;
+  const sym = {'+':'+','-':'−','*':'×','/':'÷'}[cOp];
+  document.getElementById('calc-history').textContent = cPrev + ' ' + sym + ' ' + cDisplay + ' =';
+  cDisplay = res === 'Error' ? 'Error' : String(parseFloat(res.toFixed(10)));
+  cOp = ''; cReset = true;
+  updateCalc();
+}
+
+function calcClear() {
+  cDisplay = '0'; cPrev = ''; cOp = ''; cReset = false;
+  document.getElementById('calc-history').textContent = '';
+  updateCalc();
+}
+
+function calcToggleSign() {
+  if (cDisplay !== '0' && cDisplay !== 'Error')
+    cDisplay = cDisplay.startsWith('-') ? cDisplay.slice(1) : '-' + cDisplay;
+  updateCalc();
+}
+
+function calcPercent() {
+  cDisplay = String(parseFloat(cDisplay) / 100);
+  updateCalc();
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('panel-calc').classList.contains('active')) return;
+  if (e.key >= '0' && e.key <= '9') calcNum(e.key);
+  else if (e.key === '.') calcDot();
+  else if (e.key === '+') calcOp('+');
+  else if (e.key === '-') calcOp('-');
+  else if (e.key === '*') calcOp('*');
+  else if (e.key === '/') { e.preventDefault(); calcOp('/'); }
+  else if (e.key === 'Enter' || e.key === '=') calcEquals();
+  else if (e.key === 'Escape') calcClear();
+  else if (e.key === 'Backspace') {
+    cDisplay = cDisplay.length > 1 ? cDisplay.slice(0,-1) : '0';
+    updateCalc();
+  }
+});
+
+// ===========================
+// TO-DO LIST
+// ===========================
+let todos = [];
+
+document.getElementById('todoInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') addTodo();
+});
+
+function addTodo() {
+  const inp = document.getElementById('todoInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  todos.push({ text, done: false, id: Date.now() });
+  inp.value = '';
+  renderTodos();
+}
+
+function toggleTodo(id) {
+  const t = todos.find(t => t.id === id);
+  if (t) { t.done = !t.done; renderTodos(); }
+}
+
+function deleteTodo(id) {
+  todos = todos.filter(t => t.id !== id);
+  renderTodos();
+}
+
+function renderTodos() {
+  const list = document.getElementById('todoList');
+  list.innerHTML = '';
+  const emojis = ['🔥','⭐','🎯','💡','🚀','✅','🎮','📚'];
+  todos.forEach((t, i) => {
+    const li = document.createElement('li');
+    li.className = 'todo-item' + (t.done ? ' done' : '');
+    li.innerHTML = `
+      <button class="todo-check" onclick="toggleTodo(${t.id})">${t.done ? '✓' : ''}</button>
+      <span class="todo-text">${emojis[i % emojis.length]} ${t.text}</span>
+      <button class="todo-del" onclick="deleteTodo(${t.id})">✕</button>
+    `;
+    list.appendChild(li);
+  });
+  const done = todos.filter(t => t.done).length;
+  document.getElementById('todoCount').textContent = todos.length + ' task' + (todos.length !== 1 ? 's' : '');
+  document.getElementById('todoDone').textContent = done + ' done' + (done > 0 ? ' 🎉' : '');
+}
+
+// ===========================
+// SNAKE GAME
+// ===========================
+const COLS = 15, ROWS = 15;
+let cellSize, snake, dir, nextDir, food, snakeRunning, snakeInterval, score, bestScore = 0;
+const canvas = document.getElementById('snakeCanvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+  const w = Math.min(canvas.parentElement.offsetWidth - 6, 340);
+  cellSize = Math.floor(w / COLS);
+  canvas.width = cellSize * COLS;
+  canvas.height = cellSize * ROWS;
+  if (!snakeRunning) drawSnakeIdle();
+}
+
+function drawSnakeIdle() {
+  ctx.fillStyle = '#0a0912';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+function startSnake() {
+  snake = [{x: 7, y: 7}, {x: 6, y: 7}, {x: 5, y: 7}];
+  dir = {x: 1, y: 0}; nextDir = {x: 1, y: 0};
+  score = 0;
+  document.getElementById('snakeScore').textContent = score;
+  document.getElementById('snakeOverlay').style.display = 'none';
+  placeFood();
+  snakeRunning = true;
+  clearInterval(snakeInterval);
+  snakeInterval = setInterval(gameLoop, 150);
+}
+
+function placeFood() {
+  let pos;
+  do { pos = {x: Math.floor(Math.random()*COLS), y: Math.floor(Math.random()*ROWS)}; }
+  while (snake.some(s => s.x === pos.x && s.y === pos.y));
+  food = pos;
+}
+
+function snakeDir(dx, dy) {
+  if (dx === -dir.x && dy === -dir.y) return;
+  nextDir = {x: dx, y: dy};
+}
+
+function gameLoop() {
+  dir = nextDir;
+  const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+  if (head.x < 0 || head.x >= COLS || head.y < 0 || head.y >= ROWS || snake.some(s => s.x === head.x && s.y === head.y)) {
+    gameOver(); return;
+  }
+  snake.unshift(head);
+  if (head.x === food.x && head.y === food.y) {
+    score += 10;
+    document.getElementById('snakeScore').textContent = score;
+    if (score > bestScore) { bestScore = score; document.getElementById('snakeBest').textContent = bestScore; }
+    placeFood();
+  } else snake.pop();
+  drawSnake();
+}
+
+function drawSnake() {
+  ctx.fillStyle = '#0a0912';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Grid
+  ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  ctx.lineWidth = 0.5;
+  for (let x = 0; x <= COLS; x++) { ctx.beginPath(); ctx.moveTo(x*cellSize,0); ctx.lineTo(x*cellSize,canvas.height); ctx.stroke(); }
+  for (let y = 0; y <= ROWS; y++) { ctx.beginPath(); ctx.moveTo(0,y*cellSize); ctx.lineTo(canvas.width,y*cellSize); ctx.stroke(); }
+
+  // Food
+  const fx = food.x * cellSize + cellSize/2, fy = food.y * cellSize + cellSize/2, fr = cellSize/2 - 3;
+  ctx.beginPath();
+  ctx.arc(fx, fy, fr, 0, Math.PI*2);
+  const foodGrad = ctx.createRadialGradient(fx-2, fy-2, 1, fx, fy, fr);
+  foodGrad.addColorStop(0, '#ffd93d');
+  foodGrad.addColorStop(1, '#ff6b6b');
+  ctx.fillStyle = foodGrad;
+  ctx.fill();
+
+  // Snake
+  snake.forEach((seg, i) => {
+    const x = seg.x * cellSize + 2, y = seg.y * cellSize + 2;
+    const s = cellSize - 4;
+    const r = i === 0 ? 8 : 5;
+    ctx.beginPath();
+    ctx.roundRect(x, y, s, s, r);
+    const t = i / snake.length;
+    ctx.fillStyle = i === 0 ? '#6bcb77' : `hsl(${130 + t*40}, 70%, ${55 - t*15}%)`;
+    ctx.fill();
+    if (i === 0) {
+      // Eyes
+      const eyeOff = cellSize * 0.22;
+      ctx.fillStyle = '#0a0912';
+      ctx.beginPath(); ctx.arc(seg.x*cellSize + cellSize/2 - eyeOff, seg.y*cellSize + cellSize/2 - eyeOff, 2.5, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(seg.x*cellSize + cellSize/2 + eyeOff, seg.y*cellSize + cellSize/2 - eyeOff, 2.5, 0, Math.PI*2); ctx.fill();
+    }
+  });
+}
+
+function gameOver() {
+  clearInterval(snakeInterval);
+  snakeRunning = false;
+  const ov = document.getElementById('snakeOverlay');
+  ov.style.display = 'flex';
+  ov.innerHTML = `
+    <h2>💀 Game Over!</h2>
+    <p>Score: <strong style="color:var(--accent2)">${score}</strong> | Best: <strong style="color:var(--accent2)">${bestScore}</strong></p>
+    <button class="btn-snake" onclick="startSnake()">▶ Play Again</button>
+  `;
+}
+
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('panel-snake').classList.contains('active')) return;
+  const map = {ArrowUp:{x:0,y:-1}, ArrowDown:{x:0,y:1}, ArrowLeft:{x:-1,y:0}, ArrowRight:{x:1,y:0}};
+  if (map[e.key]) { e.preventDefault(); snakeDir(map[e.key].x, map[e.key].y); }
+});
+
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+// ===========================
+// POMODORO
+// ===========================
+const POMO_MODES = {
+  work:  { minutes: 25, label: 'Focus Time',   color: '#c77dff', stroke: '#c77dff' },
+  short: { minutes: 5,  label: 'Short Break',  color: '#6bcb77', stroke: '#6bcb77' },
+  long:  { minutes: 15, label: 'Long Break',   color: '#4d96ff', stroke: '#4d96ff' },
+};
+
+const CIRCUMFERENCE = 2 * Math.PI * 95; // 596.9
+let pomoMode = 'work';
+let pomoTotal, pomoLeft, pomoRunning = false, pomoTimerRef;
+let pomoSessions = 0;
+
+function setPomoMode(m) {
+  clearInterval(pomoTimerRef);
+  pomoRunning = false;
+  pomoMode = m;
+  document.querySelectorAll('.pomo-tab').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.pomo-tab')[{work:0,short:1,long:2}[m]].classList.add('active');
+  const ring = document.getElementById('pomoRing');
+  ring.setAttribute('stroke', POMO_MODES[m].stroke);
+  resetPomo();
+}
+
+function resetPomo() {
+  clearInterval(pomoTimerRef);
+  pomoRunning = false;
+  pomoTotal = POMO_MODES[pomoMode].minutes * 60;
+  pomoLeft = pomoTotal;
+  document.getElementById('pomoBtn').textContent = '▶ Start';
+  document.getElementById('pomoLabel').textContent = POMO_MODES[pomoMode].label;
+  document.getElementById('pomoMsg').textContent = pomoMode === 'work'
+    ? "Ready to focus? You've got this! 💪"
+    : pomoMode === 'short' ? "Stretch, breathe, relax! ☕"
+    : "Great work! Take a long rest. 😴";
+  updatePomoDisplay();
+}
+
+function togglePomo() {
+  if (pomoRunning) {
+    clearInterval(pomoTimerRef);
+    pomoRunning = false;
+    document.getElementById('pomoBtn').textContent = '▶ Resume';
+    document.getElementById('pomoMsg').textContent = "Paused. Ready when you are! ⏸️";
+  } else {
+    pomoRunning = true;
+    document.getElementById('pomoBtn').textContent = '⏸ Pause';
+    document.getElementById('pomoMsg').textContent = pomoMode === 'work'
+      ? "You're crushing it! 🔥 Stay focused!"
+      : "Rest well, champ! 🌟";
+    pomoTimerRef = setInterval(() => {
+      pomoLeft--;
+      updatePomoDisplay();
+      if (pomoLeft <= 0) {
+        clearInterval(pomoTimerRef);
+        pomoRunning = false;
+        if (pomoMode === 'work') {
+          pomoSessions = Math.min(pomoSessions + 1, 4);
+          updateDots();
+          document.getElementById('pomoMsg').textContent = "🎉 Amazing! Session done! Take a break!";
+          if (pomoSessions >= 4) {
+            document.getElementById('pomoMsg').textContent = "🏆 4 sessions done! You're a LEGEND!";
+            pomoSessions = 0;
+            setTimeout(updateDots, 3000);
+          }
+        } else {
+          document.getElementById('pomoMsg').textContent = "Break's over! Time to focus! 🚀";
+        }
+        document.getElementById('pomoBtn').textContent = '▶ Start';
+      }
+    }, 1000);
+  }
+}
+
+function updatePomoDisplay() {
+  const m = Math.floor(pomoLeft / 60), s = pomoLeft % 60;
+  document.getElementById('pomoTime').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  const progress = pomoLeft / pomoTotal;
+  document.getElementById('pomoRing').style.strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+}
+
+function updateDots() {
+  for (let i = 0; i < 4; i++) {
+    document.getElementById('sd' + i).className = 'session-dot' + (i < pomoSessions ? ' filled' : '');
+  }
+}
+
+resetPomo();
+updatePomoDisplay();
+</script>
+</body>
+</html>
